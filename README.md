@@ -4,6 +4,7 @@
 ### Let's create Vagrantfile to create Three VMs for Ansible architecture
 #### Ansible controller and Ansible agents 
 
+
 ```
 
 # -*- mode: ruby -*-
@@ -60,3 +61,24 @@
  
  end
 ```
+
+
+## Install Ansible and tree
+- `sudo apt-add-repository`
+- `sudo apt install ansible tree`
+
+
+## Configure agent nodes for Ansible
+
+configure each agent node by adding them in `/etc/ansible/hosts` like this:
+```
+[web]
+192.168.33.10 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+```
+
+test the connection by pinging them `ansible all -m ping`
+
+copy host file to agent `ansible web -m ansible.builtin.copy -a "src=/etc/ansible/README.md dest=/home/vagrant/README.md"`
+
+test file has been copied `ansible web -a 'ls'`
+
