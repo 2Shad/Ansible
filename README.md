@@ -82,3 +82,8 @@ copy host file to agent `ansible web -m ansible.builtin.copy -a "src=/etc/ansibl
 
 test file has been copied `ansible web -a 'ls'`
 
+
+## Ansible Playbooks
+playbooks are yaml/yml script files to implement config management. (filename.yaml/yml)
+- Playbooks are reusable
+

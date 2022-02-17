@@ -1,0 +1,12 @@
+---
+- hosts: web
+  gather_facts: yes
+  become: true
+  tasks:
+  - name: npm
+    apt: pkg=npm state=present
+  # - name: pm2
+  #   npm:
+  #     name: pm2
+  #     global: yes
+  #     state: present
