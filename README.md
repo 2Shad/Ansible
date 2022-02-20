@@ -1,68 +1,6 @@
 # IAC with Ansible
 
 
-### Let's create Vagrantfile to create Three VMs for Ansible architecture
-#### Ansible controller and Ansible agents 
-
-
-```
-
-# -*- mode: ruby -*-
- # vi: set ft=ruby :
- 
- # All Vagrant configuration is done below. The "2" in Vagrant.configure
- # configures the configuration version (we support older styles for
- # backwards compatibility). Please don't change it unless you know what
- 
- # MULTI SERVER/VMs environment 
- #
- Vagrant.configure("2") do |config|
- # creating are Ansible controller
-   config.vm.define "controller" do |controller|
-     
-    controller.vm.box = "bento/ubuntu-18.04"
-    
-    controller.vm.hostname = 'controller'
-    
-    controller.vm.network :private_network, ip: "192.168.33.12"
-    
-    # config.hostsupdater.aliases = ["development.controller"] 
-    
-   end 
- # creating first VM called web  
-   config.vm.define "web" do |web|
-     
-     web.vm.box = "bento/ubuntu-18.04"
-    # downloading ubuntu 18.04 image
- 
-     web.vm.hostname = 'web'
-     # assigning host name to the VM
-     
-     web.vm.network :private_network, ip: "192.168.33.10"
-     #   assigning private IP
-     
-     #config.hostsupdater.aliases = ["development.web"]
-     # creating a link called development.web so we can access web page with this link instread of an IP   
-         
-   end
-   
- # creating second VM called db
-   config.vm.define "db" do |db|
-     
-     db.vm.box = "bento/ubuntu-18.04"
-     
-     db.vm.hostname = 'db'
-     
-     db.vm.network :private_network, ip: "192.168.33.11"
-     
-     #config.hostsupdater.aliases = ["development.db"]     
-   end
- 
- 
- end
-```
-
-
 ## Install Ansible and tree
 - `sudo apt-add-repository`
 - `sudo apt install ansible tree`
@@ -74,16 +12,46 @@ configure each agent node by adding them in `/etc/ansible/hosts` like this:
 ```
 [web]
 192.168.33.10 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+
+[db]
+192.168.33.11 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
 ```
 
 test the connection by pinging them `ansible all -m ping`
 
-copy host file to agent `ansible web -m ansible.builtin.copy -a "src=/etc/ansible/README.md dest=/home/vagrant/README.md"`
+copy host file to agent `ansible web -m copy -a "src=/etc/ansible/README.md dest=/home/vagrant/README.md"`
 
 test file has been copied `ansible web -a 'ls'`
 
 
-## Ansible Playbooks
-playbooks are yaml/yml script files to implement config management. (filename.yaml/yml)
-- Playbooks are reusable
+## [Ansible Playbooks](sync/Playbooks)
+playbooks are reusable yaml/yml script files to implement config management. (filename.yaml/yml)
+
+### Playbook syntax
+
+#### Playbook header
+```
+---
+# Add name of Host/IP/group
+- hosts: web
+# Collect logs
+  gather_facts: yes
+# sudo or not?
+  become: true
+  tasks
+  - name: task name here
+    task:
+      arg:
+      arg2:
+```
+
+#### Tasks
+- `apt` apt package manager, `pkg` to define package, `state=present` to set the package to running, `update_cache: yes` for updating package list and  `upgrade: yes` to upgrade packages.
+- `copy` to copy files to agent/s, `src` for source, `dest` for destination and `force: yes` for forcing overwriting.
+- `service` similar to `systemctl`, `name` to define service name, `state=restarted` to restart service, `enabled=yes` to enable service.
+- `shell` to run shell commands, separated by a comma.
+- `lineinfile` to edit a text file, `path` to define file path, use `line` to append, use `regexp` and `insertafter` in conjuntion to `line` to replace text.
+
+
+
 
