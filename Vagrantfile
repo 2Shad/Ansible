@@ -17,7 +17,7 @@
        controller.vm.hostname = 'controller'
        
        controller.vm.network :private_network, ip: "192.168.33.12"
-       
+       controller.vm.synced_folder "sync", "/home/vagrant/sync"
        # config.hostsupdater.aliases = ["development.controller"] 
        
       end 

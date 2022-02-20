@@ -1,0 +1,8 @@
+---
+- hosts: web
+  gather_facts: yes
+  tasks:
+  - name: copy
+    copy: 
+      src: /home/vagrant/app 
+      dest: /home/vagrant/app

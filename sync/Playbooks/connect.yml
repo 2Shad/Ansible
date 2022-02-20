@@ -1,0 +1,9 @@
+---
+- hosts: web
+  gather_facts: yes
+  tasks:
+  - name: DB_HOST
+    become_user: vagrant
+    ansible.builtin.lineinfile:
+      path: /home/vagrant/.bashrc
+      line: export DB_HOST=mongodb://192.168.33.11:27017/posts

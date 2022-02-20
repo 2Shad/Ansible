@@ -1,0 +1,10 @@
+---
+- hosts: web
+  gather_facts: yes
+  become: true
+  tasks:
+  - name: Copy nginx reverse proxy configs
+    copy:
+      src: /home/vagrant/sync/default
+      dest: /etc/nginx/sites-available/
+      force: yes  
