@@ -1,5 +1,6 @@
 # IAC with Ansible
 
+![Diagram](Diagrams/Ansible_Vagrant_Diagram.png)
 
 ## Install Ansible and tree
 - `sudo apt-add-repository`
@@ -53,5 +54,7 @@ playbooks are reusable yaml/yml script files to implement config management. (fi
 - `lineinfile` to edit a text file, `path` to define file path, use `line` to append, use `regexp` and `insertafter` in conjuntion to `line` to replace text.
 
 
+## A more advanced set-up using VitualBox port-forwarding, Cloudflare tunnel (Cloudflare Argo)
 
+![Diagram](Diagrams/Final.png)
 
