@@ -49,6 +49,18 @@
         
         #config.hostsupdater.aliases = ["development.db"]     
       end
+	  # creating second VM called db
+      config.vm.define "ctrl" do |ctrl|
+        
+        ctrl.vm.box = "bento/ubuntu-18.04"
+        
+        ctrl.vm.hostname = 'ctrl'
+        
+        ctrl.vm.network :private_network, ip: "192.168.33.15"
+		ctrl.vm.synced_folder "sync", "/home/vagrant/sync"
+        
+        #config.hostsupdater.aliases = ["development.db"]     
+      end
     
     
     end
