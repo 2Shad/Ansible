@@ -58,3 +58,86 @@ playbooks are reusable yaml/yml script files to implement config management. (fi
 
 ![Diagram](Diagrams/Final.png)
 
+
+## Ansible with AWS
+
+### Hybrid where Ansible is on Prem
+
+#### Set-up Ansible and Ansible-Vault for AWS:
+- install `tree` `python3` `ansible` `pip3` apt packages, and `awscli` `boto3` pip3 packages.
+- `alias python=python3`
+- set-up ansible vault with aws access & secret keys in `pass.yml` at `/etc/ansible/group_vars/all/` and create folders as appropriate.
+- `ansible-vault create pass.yml`
+- `chmod 600 pass.yml`
+- `sudo ansible db -m ping --ask-vault-pass`
+
+### EC2 Launch instance yml file
+
+`ssh-keygen -t rsa -b 4096` in `.ssh` folder.
+
+```
+---
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  vars_files:
+  - /etc/ansible/group_vars/all/pass.yml
+  vars:
+    key_name: id_rsa
+    region: eu-west-1
+    image: ami-07d8796a2b0f8d29c
+    id: "shadman-ansible"
+    sec_group: "{{ id }}-sec"
+  tasks:
+    - name: Provisioning EC2 instances
+      block:
+      - name: Upload public key to AWS
+        ec2_key:
+          name: "{{ key_name }}"
+          key_material: "{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}"
+          region: "{{ region }}"
+          aws_access_key: "{{aws_access_key}}"
+          aws_secret_key: "{{aws_secret_key}}"
+      - name: Create security group
+        ec2_group:
+          name: "{{ sec_group }}"
+          description: "Sec group for app {{ id }}"
+          # vpc_id: 12345
+          # vpc_id: 12345
+          region: "{{ region }}"
+          aws_access_key: "{{aws_access_key}}"
+          aws_secret_key: "{{aws_secret_key}}"
+          rules:
+            - proto: tcp
+              ports:
+                - 22
+              cidr_ip: 0.0.0.0/0
+              rule_desc: allow all on ssh port
+            - proto: tcp
+              ports:
+                - 80
+              cidr_ip: 0.0.0.0/0
+              rule_desc: allow all on http port
+        register: result_sec_group
+      - name: Provision instance(s)
+        ec2:
+          aws_access_key: "{{aws_access_key}}"
+          aws_secret_key: "{{aws_secret_key}}"
+          key_name: "{{ key_name }}"
+          id: "{{ id }}"
+          group_id: "{{ result_sec_group.group_id }}"
+          image: "{{ image }}"
+          instance_type: t2.micro
+          region: "{{ region }}"
+          wait: true
+          count: 1
+          instance_tags:
+            Name: eng103a_shadman_ansible
+      tags: ['never', 'create_ec2']
+```
+
+To hosts file add
+```
+[aws]
+52.209.189.160 ansible_connection=ssh ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/home/vagrant/.ssh/id_rsa
+```
