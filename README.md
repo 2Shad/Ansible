@@ -274,4 +274,5 @@ To hosts file add
 ```
 
 ### [AWS Ansible Playbooks](sync/AWS-Playbooks)
-remember `became_user: ubuntu`
+- remember to `scp` the ssh key value pairs, the `app` folder, and the `default` nginx config file
+- remember `became_user: ubuntu`
