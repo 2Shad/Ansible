@@ -1,0 +1,9 @@
+---
+- hosts: web
+  gather_facts: yes
+  tasks:
+  - name: DB_HOST
+    become_user: ubuntu
+    lineinfile:
+      path: /home/ubuntu/.bashrc
+      line: export DB_HOST=mongodb://34.246.173.213:27017/posts

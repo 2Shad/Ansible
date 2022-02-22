@@ -1,0 +1,16 @@
+---
+- hosts: db
+  gather_facts: yes
+  become: true
+# install mongodb in db instance and ensure it's running
+  tasks:
+  - name: installing mongo pre-requisites
+    apt: pkg=mongodb state=present
+  - name: allow 0.0.0.0
+    lineinfile:
+      path: /etc/mongodb.conf
+      regexp: '^bind_ip = '
+      insertafter: '^#bind_ip = '
+      line: bind_ip = 0.0.0.0
+  - name: restart and enable mongod
+    service: name=mongodb state=restarted enabled=yes

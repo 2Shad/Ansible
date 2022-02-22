@@ -1,0 +1,8 @@
+---
+- hosts: web
+  gather_facts: yes
+  tasks:
+  - name: Copy app
+    copy:
+      src: /home/ubuntu/Ansible/sync/app
+      dest: /home/ubuntu/

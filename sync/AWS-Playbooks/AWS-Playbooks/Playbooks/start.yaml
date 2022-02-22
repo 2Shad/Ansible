@@ -1,0 +1,7 @@
+---
+- hosts: web
+  gather_facts: yes
+  tasks:
+  - name: start
+    become_user: ubuntu
+    shell: export DB_HOST=mongodb://34.246.173.213:27017/posts; cd app; node seeds/seed.js; npm install; screen -d -m npm start 

@@ -1,0 +1,7 @@
+---
+- hosts: web
+  gather_facts: yes
+  become: true
+  tasks:
+  - name: restart and enable nginx
+    service: name=nginx state=restarted enabled=yes
