@@ -141,3 +141,6 @@ To hosts file add
 [aws]
 52.209.189.160 ansible_connection=ssh ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/home/vagrant/.ssh/id_rsa
 ```
+
+### [AWS Ansible Playbooks](sync/AWS-Playbooks)
+remember `became_user: ubuntu`
