@@ -276,3 +276,21 @@ To hosts file add
 ### [AWS Ansible Playbooks](sync/AWS-Playbooks)
 - remember to `scp` the ssh key value pairs, the `app` folder, and the `default` nginx config file
 - remember `became_user: ubuntu`
+
+### Extra
+```
+sudo apt remove --purge python3 
+sudo apt remove --purge python3-pip
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt install python3.9 -y
+update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+python --version
+```
+
+```
+sudo apt update && sudo apt upgrade -y
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt install ansible python3-pip
+pip3 install boto botocore boto3 awscli
+```
